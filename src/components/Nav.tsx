@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useStore } from "../state/store";
-import { Icon } from "./ui/Icon";
+import { NAV_LINKS } from "../data/content";
 import "./Nav.css";
 
-const LINKS = [
-  { href: "#ai-finder", label: "AI Gift Finder" },
-  { href: "#ideas", label: "Ideas" },
-  { href: "#collections", label: "Collections" },
-  { href: "#how-it-works", label: "How It Works" },
-  { href: "#organisations", label: "For Organisations" },
-  { href: "#about", label: "About" },
-];
+interface Props {
+  onQuote(): void;
+}
 
-export function Nav() {
+export function Nav({ onQuote }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { openQuote, saved } = useStore();
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -36,43 +26,44 @@ export function Nav() {
 
   const go = (href: string) => {
     setOpen(false);
-    if (pathname !== "/") {
-      navigate(`/${href}`);
-      return;
-    }
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <>
-      <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
+      <nav className={`nav ${scrolled ? "is-scrolled" : ""}`} aria-label="Primary">
         <div className="shell nav__inner">
-          <Link to="/" className="brand" onClick={() => setOpen(false)}>
-            <span className="brand__mark" aria-hidden="true">
-              <span className="brand__spark" />
+          <a
+            href="#top"
+            className="nav__brand"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setOpen(false);
+            }}
+          >
+            <span className="nav__mark" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
             </span>
-            <span className="brand__word">
-              GOODIE<span className="brand__dot">.</span>AI
+            <span className="nav__word">
+              GOODIE<span className="nav__dot">.</span>
             </span>
-          </Link>
+          </a>
 
-          <nav className="nav__links" aria-label="Primary">
-            {LINKS.map((l) => (
-              <button key={l.href} className="nav__link" onClick={() => go(l.href)}>
+          <div className="nav__links">
+            {NAV_LINKS.map((l) => (
+              <button key={l.href} onClick={() => go(l.href)}>
                 {l.label}
               </button>
             ))}
-          </nav>
+          </div>
 
           <div className="nav__actions">
-            {saved.length > 0 && (
-              <button className="nav__saved" onClick={() => go("#ideas")} title="Saved ideas">
-                <Icon name="heart-fill" size={15} />
-                {saved.length}
-              </button>
-            )}
-            <button className="btn btn--primary nav__cta" onClick={() => openQuote()}>
-              Get Free Quotation
+            <button className="btn btn--brand nav__cta" onClick={onQuote}>
+              Free quotation
             </button>
             <button
               className="nav__burger"
@@ -80,38 +71,58 @@ export function Nav() {
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
             >
-              <Icon name={open ? "close" : "chevron-down"} size={20} />
+              <span className={open ? "is-open" : ""} />
             </button>
           </div>
         </div>
-      </header>
+      </nav>
 
       {open && (
         <div className="nav__sheet">
-          <nav aria-label="Mobile">
-            {LINKS.map((l, i) => (
-              <button
-                key={l.href}
-                className="nav__sheet-link"
-                style={{ animationDelay: `${i * 40}ms` }}
-                onClick={() => go(l.href)}
-              >
-                {l.label}
-                <Icon name="arrow-right" size={18} />
-              </button>
-            ))}
-          </nav>
+          {NAV_LINKS.map((l, i) => (
+            <button
+              key={l.href}
+              style={{ animationDelay: `${i * 45}ms` }}
+              onClick={() => go(l.href)}
+            >
+              {l.label}
+              <span aria-hidden="true">→</span>
+            </button>
+          ))}
           <button
-            className="btn btn--primary btn--lg btn--block"
+            className="btn btn--brand btn--lg btn--block nav__sheet-cta"
             onClick={() => {
               setOpen(false);
-              openQuote();
+              onQuote();
             }}
           >
-            Get Free Quotation
+            Get free quotation
           </button>
         </div>
       )}
     </>
+  );
+}
+
+/** Sticky mobile action bar — the quotation is never more than a thumb away. */
+export function MobileBar({ onQuote, onExplore }: { onQuote(): void; onExplore(): void }) {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 460);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className={`mbar ${show ? "is-visible" : ""}`}>
+      <button className="mbar__ideas" onClick={onExplore}>
+        <span aria-hidden="true">✨</span> Ideas
+      </button>
+      <button className="mbar__quote" onClick={onQuote}>
+        Free quotation →
+      </button>
+    </div>
   );
 }

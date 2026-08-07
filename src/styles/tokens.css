@@ -1,79 +1,77 @@
 /* ==========================================================================
-   GOODIE.AI — Design tokens
-   One source of truth for colour, type, space, radius, motion and elevation.
+   GOODIE PORTAL — Design tokens
+
+   Light, editorial base. All the colour comes from the six idea-card
+   personalities, which are the brand's recognisable signature.
    ========================================================================== */
 
 :root {
-  /* ---- Brand palette -----------------------------------------------------
-     Warm ivory paper + deep rainforest ink + an ember accent.
-     Chosen to feel premium and local-to-Sarawak without going "traditional".  */
-  --paper: #faf7f1;
-  --paper-2: #f4efe5;
-  --paper-3: #ebe4d6;
-  --white: #ffffff;
+  /* ---- Base ------------------------------------------------------------- */
+  --bg: #fcfcfd;
+  --bg-2: #f5f5f7;
+  --bg-3: #ecedf0;
+  --surface: #ffffff;
+  --ink: #14161a;
+  --ink-2: #3c414b;
+  --muted: #6b7280;
+  --muted-2: #9aa1ac;
+  --line: rgb(20 22 26 / 9%);
+  --line-2: rgb(20 22 26 / 16%);
 
-  --forest: #0c1a16;
-  --forest-2: #122620;
-  --forest-3: #1b352c;
+  --night: #101216;
+  --night-2: #191c22;
+  --on-night: #f4f5f7;
+  --on-night-muted: #a1a8b4;
+  --line-night: rgb(255 255 255 / 13%);
 
-  --ink: #14120f;
-  --ink-2: #3d3830;
-  --muted: #6f6858;
-  --muted-2: #8d8779;
+  /* ---- The six card personalities --------------------------------------
+     Each is a triple: a soft tint for the card, a deep ink for type, and a
+     saturated accent for labels, rules and hover states.                    */
+  --c1-tint: #e8f0ff;
+  --c1-ink: #16346f;
+  --c1-accent: #2a6ae6;
 
-  --ember: #ff5b2e;
-  --ember-1: #ff7a54;
-  --ember-2: #e8431a;
-  --ember-wash: #fff0eb;
+  --c2-tint: #ffeae5;
+  --c2-ink: #7d2618;
+  --c2-accent: #ef5130;
 
-  --amber: #f2a83b;
-  --jade: #14806b;
-  --jade-soft: #e4f2ee;
-  --iris: #5b53d8;
+  --c3-tint: #fff4d6;
+  --c3-ink: #6f4c0a;
+  --c3-accent: #e2a012;
 
-  /* Lines & scrims */
-  --line: rgb(20 18 15 / 10%);
-  --line-strong: rgb(20 18 15 / 18%);
-  --line-dark: rgb(250 247 241 / 14%);
-  --line-dark-strong: rgb(250 247 241 / 26%);
+  --c4-tint: #e2f5ea;
+  --c4-ink: #0f5a36;
+  --c4-accent: #159b5b;
 
-  /* On-dark text */
-  --on-dark: #f5f1e8;
-  --on-dark-muted: #a9b3ac;
+  --c5-tint: #efe9ff;
+  --c5-ink: #402681;
+  --c5-accent: #7550dd;
 
-  /* ---- The "AI" signature ------------------------------------------------
-     Used sparingly — only on moments where the AI is actually doing work.   */
-  --ai-gradient: linear-gradient(104deg, #ff5b2e 0%, #f2a83b 42%, #14806b 100%);
+  --c6-tint: #ffedde;
+  --c6-ink: #7f3d10;
+  --c6-accent: #ee7620;
 
-  /* Display type only. Orange→green passes through olive at large sizes, so
-     headlines get a warm ramp instead and the tri-colour stays on small marks. */
-  --ai-gradient-text: linear-gradient(96deg, #e8431a 0%, #ff5b2e 34%, #f2a83b 78%, #d98a1e 100%);
-  --ai-gradient-soft: linear-gradient(
-    104deg,
-    rgb(255 91 46 / 16%) 0%,
-    rgb(242 168 59 / 16%) 42%,
-    rgb(20 128 107 / 16%) 100%
-  );
+  /* Primary action colour — borrowed from the coral personality */
+  --brand: #ef5130;
+  --brand-dark: #d63c1d;
+  --brand-wash: #ffeae5;
 
-  /* ---- Type --------------------------------------------------------------  */
+  /* ---- Type ------------------------------------------------------------- */
   --font-display: "Bricolage Grotesque", "Inter", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
   --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
 
-  /* Fluid scale — mobile-first, spectacular on desktop */
-  --t-display: clamp(2.65rem, 1.35rem + 5.6vw, 6rem);
-  --t-h1: clamp(2.1rem, 1.25rem + 3.6vw, 4.1rem);
-  --t-h2: clamp(1.7rem, 1.15rem + 2.3vw, 2.9rem);
-  --t-h3: clamp(1.25rem, 1.05rem + 0.85vw, 1.65rem);
-  --t-h4: clamp(1.05rem, 0.98rem + 0.35vw, 1.22rem);
-  --t-lead: clamp(1.02rem, 0.95rem + 0.55vw, 1.28rem);
-  --t-body: 1rem;
+  --t-mega: clamp(3rem, 1rem + 9.5vw, 8.5rem);
+  --t-display: clamp(2.6rem, 1.2rem + 5.6vw, 6rem);
+  --t-h1: clamp(2.1rem, 1.3rem + 3.4vw, 3.9rem);
+  --t-h2: clamp(1.75rem, 1.2rem + 2.3vw, 2.9rem);
+  --t-h3: clamp(1.22rem, 1.05rem + 0.8vw, 1.6rem);
+  --t-lead: clamp(1.02rem, 0.95rem + 0.55vw, 1.3rem);
   --t-sm: 0.9rem;
   --t-xs: 0.8rem;
-  --t-label: 0.7rem;
+  --t-label: 0.69rem;
 
-  /* ---- Space -------------------------------------------------------------  */
+  /* ---- Space ------------------------------------------------------------ */
   --s-1: 4px;
   --s-2: 8px;
   --s-3: 12px;
@@ -83,40 +81,37 @@
   --s-7: 48px;
   --s-8: 64px;
   --s-9: 96px;
-  --s-10: 128px;
 
-  --section-y: clamp(64px, 7vw, 128px);
+  --section-y: clamp(64px, 7.5vw, 132px);
   --gutter: clamp(20px, 4vw, 48px);
-  --maxw: 1240px;
-  --maxw-narrow: 780px;
+  --maxw: 1200px;
 
-  /* ---- Radius ------------------------------------------------------------  */
-  --r-sm: 8px;
-  --r-md: 14px;
-  --r-lg: 22px;
-  --r-xl: 32px;
+  /* ---- Radius ----------------------------------------------------------- */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 34px;
   --r-pill: 999px;
 
-  /* ---- Elevation ---------------------------------------------------------  */
-  --sh-1: 0 1px 2px rgb(20 18 15 / 5%), 0 2px 8px rgb(20 18 15 / 4%);
-  --sh-2: 0 2px 4px rgb(20 18 15 / 5%), 0 10px 26px rgb(20 18 15 / 7%);
-  --sh-3: 0 4px 8px rgb(20 18 15 / 6%), 0 24px 54px rgb(20 18 15 / 11%);
-  --sh-4: 0 8px 16px rgb(20 18 15 / 8%), 0 40px 90px rgb(20 18 15 / 16%);
-  --sh-ember: 0 10px 30px rgb(255 91 46 / 26%);
+  /* ---- Elevation -------------------------------------------------------- */
+  --sh-1: 0 1px 2px rgb(20 22 26 / 5%), 0 2px 8px rgb(20 22 26 / 4%);
+  --sh-2: 0 2px 6px rgb(20 22 26 / 6%), 0 12px 28px rgb(20 22 26 / 8%);
+  --sh-3: 0 6px 14px rgb(20 22 26 / 7%), 0 26px 60px rgb(20 22 26 / 12%);
+  --sh-4: 0 10px 20px rgb(20 22 26 / 9%), 0 44px 96px rgb(20 22 26 / 18%);
 
-  /* ---- Motion ------------------------------------------------------------  */
+  /* ---- Motion ----------------------------------------------------------- */
   --ease: cubic-bezier(0.2, 0.7, 0.25, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
-  --dur-1: 140ms;
-  --dur-2: 240ms;
-  --dur-3: 420ms;
-  --dur-4: 720ms;
+  --ease-spring: cubic-bezier(0.34, 1.38, 0.5, 1);
+  --d-1: 140ms;
+  --d-2: 240ms;
+  --d-3: 420ms;
+  --d-4: 700ms;
 
   --nav-h: 68px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 760px) {
   :root {
     --nav-h: 60px;
   }

@@ -1,50 +1,82 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ORGANISATIONS } from "../data/taxonomy";
-import { TRUST_STATS } from "../data/prompts";
-import { useStore } from "../state/store";
-import { Composer } from "./Composer";
-import { Icon, type IconName } from "./ui/Icon";
+import { useEffect, useRef, useState } from "react";
+import {
+  HOW_STEPS,
+  ORGANISATIONS,
+  QUOTE_NUDGES,
+  SMART_FEATURES,
+  USE_CASES,
+} from "../data/content";
 import "./Sections.css";
 
-/* ---- 01. How it works ---------------------------------------------------- */
+/* ---- Rotating headline statement ----------------------------------------- */
 
-const STEPS = [
-  {
-    n: "01",
-    title: "Tell us about your event",
-    body: "Write naturally. No forms, no fields, no login.",
-  },
-  {
-    n: "02",
-    title: "Get AI ideas",
-    body: "GoodieAI generates recommendations based on your audience, budget and programme.",
-  },
-  {
-    n: "03",
-    title: "Refine your favourites",
-    body: "Make them cheaper, premium, local, sustainable or more creative.",
-  },
-  {
-    n: "04",
-    title: "Get free quotation",
-    body: "Our human team checks sourcing, availability, customisation and actual pricing.",
-  },
+const STATEMENT_LINES = [
+  ["Don't search", "through products."],
+  ["Tell us", "about your event."],
+  ["We'll find", "the possibilities."],
 ];
+
+export function Statement() {
+  const [i, setI] = useState(0);
+  const ref = useRef<HTMLElement>(null);
+  const [live, setLive] = useState(false);
+
+  // Only cycle while on screen — an animation nobody can see is wasted work.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !("IntersectionObserver" in window)) {
+      setLive(true);
+      return;
+    }
+    const io = new IntersectionObserver(([e]) => setLive(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!live) return;
+    const id = window.setInterval(() => setI((n) => (n + 1) % STATEMENT_LINES.length), 2600);
+    return () => window.clearInterval(id);
+  }, [live]);
+
+  return (
+    <section className="section section--night stmt" ref={ref}>
+      <div className="shell">
+        <p className="stmt__count" aria-hidden="true">
+          {String(i + 1).padStart(2, "0")} / 03
+        </p>
+
+        <h2 className="stmt__lines" key={i}>
+          <span>{STATEMENT_LINES[i][0]}</span>
+          <span className="stmt__accent">{STATEMENT_LINES[i][1]}</span>
+        </h2>
+
+        <p className="stmt__sub">A smarter way to plan event goodies.</p>
+
+        <div className="stmt__ticks" aria-hidden="true">
+          {STATEMENT_LINES.map((_, n) => (
+            <span key={n} className={n === i ? "is-on" : ""} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---- How it works -------------------------------------------------------- */
 
 export function HowItWorks() {
   return (
-    <section className="section how" id="how-it-works">
+    <section className="section how" id="how">
       <div className="shell">
         <div className="sec-head">
-          <div className="sec-head__text">
-            <span className="eyebrow">How it works</span>
-            <h2>Four steps. No forms until the end.</h2>
-          </div>
+          <span className="eyebrow">How it works</span>
+          <h2>Explore first. Forms last.</h2>
+          <p>Four steps, and you only give us details once you've found something you like.</p>
         </div>
 
         <ol className="how__grid">
-          {STEPS.map((s, i) => (
+          {HOW_STEPS.map((s, i) => (
             <li
               key={s.n}
               className="how__step reveal"
@@ -61,95 +93,153 @@ export function HowItWorks() {
   );
 }
 
-/* ---- 02. Sarawak advantage ----------------------------------------------- */
+/* ---- Free quotation nudges ----------------------------------------------- */
 
-const SARAWAK_LAYERS = [
-  "Local crafts from longhouse collectives",
-  "Sarawak-made food with real provenance",
-  "Motifs reinterpreted by local designers",
-  "Products from local SMEs and home enterprises",
-  "Cultural elements that survive an airport",
-  "Community-sourced sustainable materials",
-];
-
-export function SarawakAdvantage() {
-  const { ask } = useStore();
-
+export function QuoteNudges({ onQuote }: { onQuote(): void }) {
   return (
-    <section className="section sarawak">
-      <div className="shell sarawak__inner">
-        <div className="sarawak__text">
-          <span className="eyebrow">The Sarawak layer</span>
-          <h2>
-            Make It <span className="sarawak__em">Sarawak</span>.
-          </h2>
-          <p>
-            Local identity is an option you switch on — not a costume the whole gift has to wear. Ask
-            GoodieAI to add a Sarawak touch and it re-sources the concept around local makers,
-            materials and design.
-          </p>
+    <section className="section section--tint nudge">
+      <div className="shell">
+        <ul className="nudge__grid">
+          {QUOTE_NUDGES.map((n, i) => (
+            <li
+              key={n.q}
+              className="nudge__item reveal"
+              style={{ ["--reveal-delay" as string]: `${i * 70}ms` }}
+            >
+              <span className="nudge__q">{n.q}</span>
+              <span className="nudge__a">{n.a}</span>
+            </li>
+          ))}
+        </ul>
 
-          <ul className="sarawak__list">
-            {SARAWAK_LAYERS.map((l, i) => (
-              <li key={l} className="reveal" style={{ ["--reveal-delay" as string]: `${i * 55}ms` }}>
-                <Icon name="check" size={15} />
-                {l}
-              </li>
-            ))}
-          </ul>
-
-          <button
-            className="btn btn--primary btn--lg"
-            onClick={() =>
-              ask(
-                "Recommend goodies with a strong Sarawak identity — local makers, local materials and local design, for an event of about 200 people at around RM60 each.",
-              )
-            }
-          >
-            <span aria-hidden="true">✨</span> Add Sarawak Touch
+        <div className="nudge__cta">
+          <p>Have an event coming? Start here.</p>
+          <button className="btn btn--brand btn--lg" onClick={onQuote}>
+            Get free quotation <span className="btn__arrow">→</span>
           </button>
-        </div>
-
-        <div className="sarawak__art" aria-hidden="true">
-          <div className="sarawak__ring sarawak__ring--1" />
-          <div className="sarawak__ring sarawak__ring--2" />
-          <div className="sarawak__ring sarawak__ring--3" />
-          <span className="sarawak__glyph">❋</span>
         </div>
       </div>
     </section>
   );
 }
 
-/* ---- 03. Organisations --------------------------------------------------- */
+/* ---- Smart technology reveal --------------------------------------------- */
+
+export function SmartTech() {
+  return (
+    <section className="section section--night smart" id="smart">
+      <div className="shell">
+        <div className="smart__head">
+          <span className="eyebrow">The part behind the scenes</span>
+          <h2>
+            Wonder How We Keep Finding Ideas?
+            <br />
+            <span className="smart__em">There's Something Smart Behind It.</span>
+          </h2>
+          <p>
+            Our Smart AI Solution helps analyse event requirements, audiences, budgets and gifting
+            possibilities — turning thousands of possible combinations into ideas that actually make
+            sense for your programme.
+          </p>
+          <span className="smart-badge smart__badge">
+            <span className="smart-badge__spark" aria-hidden="true">
+              ✦
+            </span>
+            Smart AI Powered
+          </span>
+        </div>
+
+        <ul className="smart__bento">
+          {SMART_FEATURES.map((f, i) => (
+            <li
+              key={f.title}
+              className={`smart__cell reveal ${f.span ? `smart__cell--${f.span}` : ""}`}
+              style={{ ["--reveal-delay" as string]: `${Math.min(i, 9) * 45}ms` }}
+            >
+              <h3>{f.title}</h3>
+              <p>{f.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---- Sarawak positioning ------------------------------------------------- */
+
+export function Sarawak() {
+  return (
+    <section className="section sarawak">
+      <div className="shell">
+        <div className="sec-head">
+          <span className="eyebrow">Where we work</span>
+          <h2>Built for Sarawak Events.</h2>
+          <p>
+            From Kuching to Miri. Sibu to Bintulu. From 50 VIPs to 5,000 participants.
+          </p>
+        </div>
+
+        <ul className="sarawak__cases">
+          {USE_CASES.map((u, i) => (
+            <li
+              key={u}
+              className="reveal"
+              style={{ ["--reveal-delay" as string]: `${i * 40}ms` }}
+            >
+              {u}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---- Price range --------------------------------------------------------- */
+
+export function PriceRange() {
+  return (
+    <section className="section section--tint price">
+      <div className="shell price__inner">
+        <p className="price__range" aria-label="From RM3 to over RM300">
+          <span>RM3</span>
+          <span className="price__arrow" aria-hidden="true">
+            →
+          </span>
+          <span className="price__high">RM300+</span>
+        </p>
+        <p className="price__lead">Mass-event freebies → Premium VIP gifts</p>
+        <p className="price__sub">
+          Different events. Different people. Different budgets. Better ideas.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ---- Organisations ------------------------------------------------------- */
 
 export function Organisations() {
   return (
-    <section className="section section-tint orgs" id="organisations">
+    <section className="section orgs" id="organisations">
       <div className="shell">
         <div className="sec-head">
-          <div className="sec-head__text">
-            <span className="eyebrow">Who this is for</span>
-            <h2>Built for people who organise things.</h2>
-            <p>
-              Different constraints, same question. We shape the answer — and the paperwork — around
-              yours.
-            </p>
-          </div>
+          <span className="eyebrow">Who we work with</span>
+          <h2>Built for people who organise things.</h2>
+          <p>Different constraints, same question — what should we actually give?</p>
         </div>
 
         <ul className="orgs__grid">
           {ORGANISATIONS.map((o, i) => (
             <li
               key={o.name}
-              className="org card card--lift reveal"
-              style={{ ["--reveal-delay" as string]: `${i * 45}ms` }}
+              className="orgs__card reveal"
+              style={{ ["--reveal-delay" as string]: `${i * 55}ms` }}
             >
-              <span className="org__icon">
-                <Icon name={o.icon as IconName} size={18} />
-              </span>
+              <span className="orgs__dot" aria-hidden="true" />
               <h3>{o.name}</h3>
-              <p>{o.blurb}</p>
+              <p>{o.body}</p>
             </li>
           ))}
         </ul>
@@ -158,201 +248,53 @@ export function Organisations() {
   );
 }
 
-/* ---- 04. Price positioning ----------------------------------------------- */
+/* ---- Final CTA + footer -------------------------------------------------- */
 
-export function PricePositioning() {
+export function FinalCTA({ onQuote, onExplore }: { onQuote(): void; onExplore(): void }) {
   return (
-    <section className="section section-dark price">
-      <div className="shell price__inner">
-        <div className="price__range" aria-hidden="true">
-          <span>RM3</span>
-          <span className="price__arrow">→</span>
-          <span>RM300+</span>
-        </div>
-        <p className="price__lead">
-          From mass-event freebies to premium VIP appreciation gifts.
-        </p>
-        <p className="price__sub">
-          We help you find ideas appropriate to your audience, budget, purpose, event and brand.
-        </p>
-
-        <ul className="price__axes">
-          {["Audience", "Budget", "Purpose", "Event", "Brand"].map((a, i) => (
-            <li key={a} className="reveal" style={{ ["--reveal-delay" as string]: `${i * 60}ms` }}>
-              {a}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-/* ---- 05. Philosophy / About ---------------------------------------------- */
-
-export function About() {
-  return (
-    <section className="section about" id="about">
-      <div className="shell about__inner">
-        <div className="about__quote">
-          <span className="eyebrow">Our philosophy</span>
-          <blockquote>
-            We don't just sell goodies.
-            <br />
-            <span>We help you discover what is worth giving.</span>
-          </blockquote>
-          <p>
-            Nobody remembers another generic pen. People remember thoughtful gifts — the ones that
-            get used, talked about, and quietly keep your organisation in the room long after the
-            event ends. GoodieAI optimises for value, not price.
-          </p>
-        </div>
-
-        <ul className="about__pillars">
-          {[
-            { t: "Usefulness", d: "It survives past the first week." },
-            { t: "Memory", d: "It gets associated with your programme." },
-            { t: "Conversation", d: "Someone asks where it came from." },
-            { t: "Appreciation", d: "The recipient feels considered, not processed." },
-          ].map((p, i) => (
-            <li key={p.t} className="reveal" style={{ ["--reveal-delay" as string]: `${i * 60}ms` }}>
-              <h3>{p.t}</h3>
-              <p>{p.d}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-/* ---- 06. Trust ----------------------------------------------------------- */
-
-export function Trust() {
-  return (
-    <section className="section section-tint trust">
-      <div className="shell">
-        <div className="trust__head">
-          <span className="eyebrow">Track record</span>
-          <span className="trust__flag">Sample figures — prototype</span>
-        </div>
-
-        <ul className="trust__stats">
-          {TRUST_STATS.map((s, i) => (
-            <li key={s.label} className="reveal" style={{ ["--reveal-delay" as string]: `${i * 70}ms` }}>
-              <strong>{s.value}</strong>
-              <span>{s.label}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="trust__logos">
-          <span className="trust__logos-label">Client logos will appear here</span>
-          <div className="trust__logo-row">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="trust__logo" aria-hidden="true" />
-            ))}
-          </div>
-        </div>
-
-        <div className="trust__promise">
-          <Icon name="shield" size={20} />
-          <p>
-            <strong>AI suggests. Humans verify. You decide.</strong> Every estimate on this site is
-            an indicative idea range. Our team confirms specification, stock, customisation and final
-            pricing before any quotation is issued.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---- 07. Closing CTA ----------------------------------------------------- */
-
-export function FooterCTA() {
-  const { ask, openQuote, phase } = useStore();
-  const [draft, setDraft] = useState("");
-
-  return (
-    <section className="section footer-cta">
-      <div className="shell footer-cta__inner">
+    <section className="section final">
+      <div className="shell final__inner">
         <h2>
-          Your next event deserves
+          Got An Event Coming?
           <br />
-          <span>something worth remembering.</span>
+          <span>Let's Find Something Worth Giving.</span>
         </h2>
-        <p>Tell GoodieAI what you're planning.</p>
 
-        <div className="footer-cta__composer">
-          <Composer
-            value={draft}
-            onChange={setDraft}
-            onSubmit={(v) => {
-              ask(v);
-              document.getElementById("ai-finder")?.scrollIntoView({ behavior: "smooth" });
-            }}
-            variant="compact"
-            busy={phase === "thinking"}
-            ctaLabel="Find My Goodie Ideas"
-          />
+        <div className="final__actions">
+          <button className="btn btn--ghost btn--lg" onClick={onExplore}>
+            <span aria-hidden="true">✨</span> Show me more ideas
+          </button>
+          <button className="btn btn--brand btn--lg" onClick={onQuote}>
+            Get free quotation <span className="btn__arrow">→</span>
+          </button>
         </div>
 
-        <p className="footer-cta__or">
-          or{" "}
-          <button onClick={() => openQuote()} className="footer-cta__link">
-            Get a Free Quotation
-          </button>
-        </p>
+        <p className="final__line">Smart ideas. Better choices. Free quotation.</p>
+
+        <span className="smart-badge">
+          <span className="smart-badge__spark" aria-hidden="true">
+            ✦
+          </span>
+          Powered by Smart AI Solutions
+        </span>
       </div>
     </section>
   );
 }
-
-/* ---- 08. Footer ---------------------------------------------------------- */
 
 export function Footer() {
-  const { openQuote } = useStore();
-
   return (
     <footer className="footer">
       <div className="shell footer__inner">
-        <div className="footer__brand">
-          <span className="brand__word">
-            GOODIE<span className="brand__dot">.</span>AI
-          </span>
-          <p>Tell us about your event. AI finds the right goodies.</p>
-          <p className="footer__place">Kuching, Sarawak · Malaysia</p>
-        </div>
-
-        <nav className="footer__cols" aria-label="Footer">
-          <div>
-            <h3>Product</h3>
-            <a href="#ai-finder">AI Gift Finder</a>
-            <a href="#ideas">Idea Wall</a>
-            <a href="#collections">Collections</a>
-            <a href="#how-it-works">How It Works</a>
-          </div>
-          <div>
-            <h3>Company</h3>
-            <a href="#about">About</a>
-            <a href="#organisations">For Organisations</a>
-            <button onClick={() => openQuote()}>Free Quotation</button>
-          </div>
-          <div>
-            <h3>Ideas</h3>
-            <Link to="/idea/premium-sarawak-box">Premium Sarawak Box</Link>
-            <Link to="/idea/eco-impact-pack">Eco Impact Pack</Link>
-            <Link to="/idea/please-not-another-mug">Not Another Mug</Link>
-          </div>
-        </nav>
-      </div>
-
-      <div className="shell footer__legal">
-        <p>© {new Date().getFullYear()} GOODIE.AI — working brand, prototype build.</p>
-        <p>
-          All prices shown are indicative idea ranges, not quotations. Sample statistics and trending
-          data are illustrative.
+        <span className="footer__brand">
+          GOODIE<span className="footer__dot">.</span>
+        </span>
+        <p className="footer__note">
+          Sarawak event goodies &amp; gifts · Kuching, Malaysia
+        </p>
+        <p className="footer__legal">
+          © {new Date().getFullYear()} Goodie — working brand, V1 prototype. All prices shown are
+          indicative estimates, not quotations.
         </p>
       </div>
     </footer>

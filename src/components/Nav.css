@@ -5,18 +5,18 @@
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  background: rgb(250 247 241 / 86%);
+  background: rgb(252 252 253 / 88%);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid transparent;
   transition:
-    border-color var(--dur-2) var(--ease),
-    background-color var(--dur-2) var(--ease);
+    border-color var(--d-2) var(--ease),
+    background-color var(--d-2) var(--ease);
 }
 
-.nav--scrolled {
+.nav.is-scrolled {
   border-bottom-color: var(--line);
-  background: rgb(250 247 241 / 96%);
+  background: rgb(252 252 253 / 96%);
 }
 
 .nav__inner {
@@ -27,53 +27,72 @@
   width: 100%;
 }
 
-/* ---- Brand --------------------------------------------------------------- */
+/* ---- Brand: a four-colour goodie mark ------------------------------------ */
 
-.brand {
+.nav__brand {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   flex-shrink: 0;
 }
 
-.brand__mark {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  background: var(--forest);
+.nav__mark {
   display: grid;
-  place-items: center;
-  overflow: hidden;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  width: 22px;
+  height: 22px;
 }
 
-.brand__mark::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--ai-gradient);
-  opacity: 0.9;
-  mask-image: radial-gradient(circle at 30% 30%, #000 0%, transparent 62%);
+.nav__mark i {
+  border-radius: 3px;
+  transition: transform var(--d-2) var(--ease-spring);
 }
 
-.brand__spark {
-  position: relative;
-  z-index: 1;
-  width: 11px;
-  height: 11px;
-  background: var(--paper);
-  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+.nav__mark i:nth-child(1) {
+  background: var(--c1-accent);
 }
 
-.brand__word {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.02rem;
-  letter-spacing: -0.035em;
+.nav__mark i:nth-child(2) {
+  background: var(--c3-accent);
 }
 
-.brand__dot {
-  color: var(--ember);
+.nav__mark i:nth-child(3) {
+  background: var(--c4-accent);
+}
+
+.nav__mark i:nth-child(4) {
+  background: var(--c2-accent);
+}
+
+.nav__brand:hover .nav__mark i:nth-child(1) {
+  transform: translate(-1px, -1px);
+}
+
+.nav__brand:hover .nav__mark i:nth-child(2) {
+  transform: translate(1px, -1px);
+}
+
+.nav__brand:hover .nav__mark i:nth-child(3) {
+  transform: translate(-1px, 1px);
+}
+
+.nav__brand:hover .nav__mark i:nth-child(4) {
+  transform: translate(1px, 1px);
+}
+
+/* The wordmark is one flex item so the brand's `gap` can't wedge itself
+   between GOODIE and its full stop. */
+.nav__word {
+  white-space: nowrap;
+}
+
+.nav__dot {
+  color: var(--brand);
 }
 
 /* ---- Links --------------------------------------------------------------- */
@@ -84,53 +103,74 @@
   gap: 2px;
 }
 
-.nav__link {
-  padding: 8px 13px;
+.nav__links button {
+  padding: 8px 14px;
   border-radius: var(--r-pill);
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.885rem;
+  font-weight: 550;
   color: var(--ink-2);
   transition:
-    color var(--dur-1) var(--ease),
-    background-color var(--dur-1) var(--ease);
+    color var(--d-1) var(--ease),
+    background-color var(--d-1) var(--ease);
 }
 
-.nav__link:hover {
+.nav__links button:hover {
   color: var(--ink);
-  background: rgb(20 18 15 / 5%);
+  background: var(--bg-3);
 }
 
 .nav__actions {
   display: flex;
   align-items: center;
-  gap: var(--s-2);
-}
-
-.nav__saved {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 12px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--line-strong);
-  font-size: var(--t-sm);
-  font-weight: 600;
-  color: var(--ember-2);
-  background: var(--ember-wash);
+  gap: 10px;
 }
 
 .nav__cta {
-  padding: 10px 18px;
+  padding: 11px 20px;
+  font-size: 0.885rem;
 }
+
+/* ---- Burger -------------------------------------------------------------- */
 
 .nav__burger {
   display: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  border: 1px solid var(--line-strong);
-  align-items: center;
-  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  border: 1px solid var(--line-2);
+  place-items: center;
+}
+
+.nav__burger span,
+.nav__burger span::before,
+.nav__burger span::after {
+  content: "";
+  display: block;
+  width: 17px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform var(--d-2) var(--ease);
+}
+
+.nav__burger span::before {
+  transform: translateY(-6px);
+}
+
+.nav__burger span::after {
+  transform: translateY(4px);
+}
+
+.nav__burger span.is-open {
+  background: transparent;
+}
+
+.nav__burger span.is-open::before {
+  transform: rotate(45deg);
+}
+
+.nav__burger span.is-open::after {
+  transform: rotate(-45deg) translateY(0);
 }
 
 /* ---- Mobile sheet -------------------------------------------------------- */
@@ -139,46 +179,109 @@
   position: fixed;
   inset: var(--nav-h) 0 0;
   z-index: 89;
-  background: var(--paper);
+  display: flex;
+  flex-direction: column;
   padding: var(--s-6) var(--gutter) calc(var(--s-8) + env(safe-area-inset-bottom));
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-6);
+  background: var(--bg);
   overflow-y: auto;
-  animation: fade-in var(--dur-2) var(--ease);
+  animation: fade-in var(--d-2) var(--ease);
 }
 
-.nav__sheet nav {
-  display: flex;
-  flex-direction: column;
-}
-
-.nav__sheet-link {
+.nav__sheet > button:not(.nav__sheet-cta) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 4px;
+  padding: 20px 4px;
   border-bottom: 1px solid var(--line);
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.032em;
   text-align: left;
-  animation: rise-in var(--dur-3) var(--ease-out) backwards;
+  animation: rise-in var(--d-3) var(--ease-out) backwards;
 }
 
-@media (max-width: 1080px) {
+.nav__sheet-cta {
+  margin-top: var(--s-6);
+}
+
+@media (max-width: 1000px) {
   .nav__links {
     display: none;
   }
 
   .nav__burger {
-    display: inline-flex;
+    display: grid;
   }
 }
 
 @media (max-width: 560px) {
   .nav__cta {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   Sticky mobile bar
+   ========================================================================== */
+
+.mbar {
+  position: fixed;
+  z-index: 80;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  display: none;
+  gap: 8px;
+  transform: translateY(150%);
+  opacity: 0;
+  transition:
+    transform var(--d-3) var(--ease-out),
+    opacity var(--d-2) var(--ease);
+}
+
+.mbar.is-visible {
+  transform: none;
+  opacity: 1;
+}
+
+.mbar__ideas,
+.mbar__quote {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: var(--r-pill);
+  font-size: 0.96rem;
+  font-weight: 650;
+}
+
+.mbar__ideas {
+  flex: 0 0 38%;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 8px 26px rgb(16 18 22 / 30%);
+}
+
+.mbar__quote {
+  flex: 1;
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 8px 26px rgb(239 81 48 / 34%);
+}
+
+.mbar__ideas:active,
+.mbar__quote:active {
+  transform: scale(0.985);
+}
+
+@media (max-width: 760px) {
+  .mbar {
+    display: flex;
+  }
+
+  .footer {
+    padding-bottom: calc(var(--s-8) + env(safe-area-inset-bottom));
   }
 }

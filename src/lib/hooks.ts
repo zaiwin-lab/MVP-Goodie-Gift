@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
- * Reveals every `.reveal` element in the document as it scrolls into view.
- *
- * Mounted once at the app root and backed by a MutationObserver, so a section
- * that forgets to opt in can't end up permanently invisible — which is exactly
- * what happens with per-section observers.
+ * Reveals every `.reveal` element as it scrolls into view. Mounted once at the
+ * app root and backed by a MutationObserver, so a section can't be left
+ * permanently invisible by forgetting to opt in.
  */
 export function useRevealObserver() {
   useEffect(() => {
@@ -24,7 +22,7 @@ export function useRevealObserver() {
           io.unobserve(entry.target);
         });
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.06 },
     );
 
     const scan = () =>
@@ -45,85 +43,32 @@ export function useRevealObserver() {
   }, []);
 }
 
-export function useLocalStorage<T>(key: string, initial: T) {
-  const [value, setValue] = useState<T>(() => {
-    try {
-      const raw = window.localStorage.getItem(key);
-      return raw ? (JSON.parse(raw) as T) : initial;
-    } catch {
-      return initial;
-    }
-  });
-
+/** Locks background scrolling while a modal or drawer is open. */
+export function useScrollLock(active: boolean) {
   useEffect(() => {
-    try {
-      window.localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      /* private mode — state stays in memory, which is fine */
-    }
-  }, [key, value]);
-
-  return [value, setValue] as const;
+    if (!active) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [active]);
 }
 
-/** Cycles through placeholder lines while the input is empty and unfocused. */
-export function useRotatingPlaceholder(lines: string[], active: boolean, ms = 3600) {
+/** Cycles an index through a list at a fixed interval while active. */
+export function useCycle(length: number, active: boolean, ms = 900) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (!active) return;
-    const id = window.setInterval(() => setIndex((i) => (i + 1) % lines.length), ms);
+    if (!active) {
+      setIndex(0);
+      return;
+    }
+    const id = window.setInterval(() => {
+      setIndex((i) => Math.min(length - 1, i + 1));
+    }, ms);
     return () => window.clearInterval(id);
-  }, [active, lines.length, ms]);
+  }, [active, length, ms]);
 
-  return lines[index];
-}
-
-/** Types a string into state, character by character. Used for sample prompts. */
-export function useTypeInto(setter: (v: string) => void, speed = 12) {
-  const timer = useRef<number | null>(null);
-
-  const stop = useCallback(() => {
-    if (timer.current) window.clearInterval(timer.current);
-    timer.current = null;
-  }, []);
-
-  const type = useCallback(
-    (text: string) => {
-      stop();
-      const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-      if (reduced) {
-        setter(text);
-        return;
-      }
-      let i = 0;
-      const step = Math.max(1, Math.round(text.length / 70));
-      timer.current = window.setInterval(() => {
-        i = Math.min(text.length, i + step);
-        setter(text.slice(0, i));
-        if (i >= text.length) stop();
-      }, speed);
-    },
-    [setter, speed, stop],
-  );
-
-  useEffect(() => stop, [stop]);
-
-  return type;
-}
-
-export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(
-    () => typeof window !== "undefined" && window.matchMedia(query).matches,
-  );
-
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const handler = () => setMatches(mq.matches);
-    handler();
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, [query]);
-
-  return matches;
+  return index;
 }

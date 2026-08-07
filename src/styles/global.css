@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GOODIE.AI — Reset, primitives, layout and shared UI
+   GOODIE PORTAL — Reset, primitives and shared UI
    ========================================================================== */
 
 *,
@@ -33,18 +33,17 @@ html {
 
 body {
   font-family: var(--font-body);
-  font-size: var(--t-body);
+  font-size: 1rem;
   line-height: 1.6;
   color: var(--ink);
-  background: var(--paper);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
 img,
-svg,
-video {
+svg {
   display: block;
   max-width: 100%;
 }
@@ -74,8 +73,8 @@ h3,
 h4 {
   font-family: var(--font-display);
   font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.028em;
+  line-height: 1.03;
+  letter-spacing: -0.032em;
   text-wrap: balance;
 }
 
@@ -84,18 +83,18 @@ p {
 }
 
 :focus-visible {
-  outline: 2px solid var(--ember);
+  outline: 2px solid var(--brand);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 ::selection {
-  background: var(--ember);
+  background: var(--brand);
   color: #fff;
 }
 
 /* --------------------------------------------------------------------------
-   Layout primitives
+   Layout
    -------------------------------------------------------------------------- */
 
 .shell {
@@ -105,33 +104,24 @@ p {
   padding-inline: var(--gutter);
 }
 
-.shell-narrow {
-  max-width: var(--maxw-narrow);
-}
-
 .section {
   padding-block: var(--section-y);
   position: relative;
+  scroll-margin-top: var(--nav-h);
 }
 
-.section-dark {
-  background: var(--forest);
-  color: var(--on-dark);
+.section--tint {
+  background: var(--bg-2);
 }
 
-.section-dark h1,
-.section-dark h2,
-.section-dark h3 {
-  color: var(--on-dark);
+.section--night {
+  background: var(--night);
+  color: var(--on-night);
 }
 
-.section-tint {
-  background: var(--paper-2);
-}
-
-.stack {
-  display: flex;
-  flex-direction: column;
+.section--night h2,
+.section--night h3 {
+  color: var(--on-night);
 }
 
 .skip-link {
@@ -140,53 +130,55 @@ p {
   top: 0;
   z-index: 200;
   background: var(--ink);
-  color: var(--paper);
+  color: var(--bg);
   padding: 12px 18px;
-  border-radius: 0 0 var(--r-sm) 0;
 }
 
 .skip-link:focus {
   left: 0;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* --------------------------------------------------------------------------
-   Section headers
+   Section headings
    -------------------------------------------------------------------------- */
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   font-size: var(--t-label);
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  letter-spacing: 0.17em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.section-dark .eyebrow {
-  color: var(--on-dark-muted);
-}
-
 .eyebrow::before {
   content: "";
-  width: 22px;
+  width: 20px;
   height: 1px;
   background: currentcolor;
-  opacity: 0.5;
+  opacity: 0.45;
+}
+
+.section--night .eyebrow {
+  color: var(--on-night-muted);
 }
 
 .sec-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--s-5);
+  max-width: 700px;
   margin-bottom: var(--s-7);
-}
-
-.sec-head__text {
-  max-width: 640px;
 }
 
 .sec-head h2 {
@@ -195,14 +187,14 @@ p {
 }
 
 .sec-head p {
-  color: var(--muted);
-  font-size: var(--t-lead);
   margin-top: var(--s-4);
+  font-size: var(--t-lead);
   line-height: 1.5;
+  color: var(--muted);
 }
 
-.section-dark .sec-head p {
-  color: var(--on-dark-muted);
+.section--night .sec-head p {
+  color: var(--on-night-muted);
 }
 
 /* --------------------------------------------------------------------------
@@ -211,25 +203,25 @@ p {
 
 .btn {
   --btn-bg: var(--ink);
-  --btn-fg: var(--paper);
+  --btn-fg: #fff;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  padding: 13px 22px;
+  gap: 10px;
+  padding: 15px 26px;
   border-radius: var(--r-pill);
   background: var(--btn-bg);
   color: var(--btn-fg);
-  font-size: var(--t-sm);
+  font-size: 0.94rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.006em;
   white-space: nowrap;
   transition:
-    transform var(--dur-1) var(--ease),
-    box-shadow var(--dur-2) var(--ease),
-    background-color var(--dur-2) var(--ease),
-    opacity var(--dur-2) var(--ease);
+    transform var(--d-1) var(--ease),
+    box-shadow var(--d-2) var(--ease),
+    background-color var(--d-2) var(--ease),
+    opacity var(--d-2) var(--ease);
 }
 
 .btn:hover {
@@ -242,54 +234,61 @@ p {
 }
 
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   pointer-events: none;
 }
 
-.btn--primary {
-  --btn-bg: var(--ember);
-  --btn-fg: #fff;
+.btn--brand {
+  --btn-bg: var(--brand);
 }
 
-.btn--primary:hover {
-  --btn-bg: var(--ember-2);
+.btn--brand:hover {
+  --btn-bg: var(--brand-dark);
 
-  box-shadow: var(--sh-ember);
-}
-
-.btn--lg {
-  padding: 17px 32px;
-  font-size: 1.02rem;
+  box-shadow: 0 10px 30px rgb(239 81 48 / 30%);
 }
 
 .btn--ghost {
   --btn-bg: transparent;
   --btn-fg: var(--ink);
 
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line-2);
 }
 
 .btn--ghost:hover {
-  --btn-bg: var(--white);
+  --btn-bg: var(--surface);
 }
 
-.section-dark .btn--ghost {
-  --btn-fg: var(--on-dark);
+.section--night .btn--ghost {
+  --btn-fg: var(--on-night);
 
-  border-color: var(--line-dark-strong);
+  border-color: var(--line-night);
 }
 
-.section-dark .btn--ghost:hover {
+.section--night .btn--ghost:hover {
   --btn-bg: rgb(255 255 255 / 8%);
 }
 
 .btn--light {
-  --btn-bg: var(--paper);
+  --btn-bg: #fff;
   --btn-fg: var(--ink);
+}
+
+.btn--lg {
+  padding: 18px 34px;
+  font-size: 1.02rem;
 }
 
 .btn--block {
   width: 100%;
+}
+
+.btn__arrow {
+  transition: transform var(--d-2) var(--ease-spring);
+}
+
+.btn:hover .btn__arrow {
+  transform: translateX(4px);
 }
 
 /* --------------------------------------------------------------------------
@@ -299,97 +298,85 @@ p {
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 15px;
+  gap: 8px;
+  padding: 12px 20px;
   border-radius: var(--r-pill);
-  border: 1px solid var(--line-strong);
-  background: var(--white);
+  border: 1px solid var(--line-2);
+  background: var(--surface);
   font-size: var(--t-sm);
-  font-weight: 500;
+  font-weight: 550;
   color: var(--ink-2);
   transition:
-    transform var(--dur-1) var(--ease),
-    border-color var(--dur-2) var(--ease),
-    background-color var(--dur-2) var(--ease),
-    color var(--dur-2) var(--ease);
+    transform var(--d-1) var(--ease),
+    border-color var(--d-2) var(--ease),
+    background-color var(--d-2) var(--ease),
+    color var(--d-2) var(--ease);
 }
 
 .chip:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   border-color: var(--ink);
   color: var(--ink);
 }
 
-.chip[aria-pressed="true"],
-.chip--active {
+.chip[aria-pressed="true"] {
   background: var(--ink);
   border-color: var(--ink);
-  color: var(--paper);
+  color: #fff;
 }
 
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: var(--r-pill);
-  background: var(--paper-2);
-  border: 1px solid var(--line);
   font-size: var(--t-xs);
-  font-weight: 500;
-  color: var(--muted);
+  font-weight: 550;
   white-space: nowrap;
 }
 
-.tag--jade {
-  background: var(--jade-soft);
-  border-color: rgb(20 128 107 / 22%);
-  color: var(--jade);
+/* --------------------------------------------------------------------------
+   The "smart" badge — the only place technology is signalled visually
+   -------------------------------------------------------------------------- */
+
+.smart-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  font-size: var(--t-xs);
+  font-weight: 550;
+  color: var(--muted);
 }
 
-.tag--ember {
-  background: var(--ember-wash);
-  border-color: rgb(255 91 46 / 24%);
-  color: var(--ember-2);
+.smart-badge__spark {
+  color: var(--brand);
+  font-size: 0.9em;
+}
+
+.section--night .smart-badge {
+  background: rgb(255 255 255 / 6%);
+  border-color: var(--line-night);
+  color: var(--on-night-muted);
 }
 
 /* --------------------------------------------------------------------------
-   Cards
+   Scroll reveal — fail-safe: hidden only once the observer has mounted
    -------------------------------------------------------------------------- */
 
-.card {
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  box-shadow: var(--sh-1);
-  transition:
-    transform var(--dur-2) var(--ease-out),
-    box-shadow var(--dur-2) var(--ease-out),
-    border-color var(--dur-2) var(--ease);
-}
-
-.card--lift:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sh-3);
-  border-color: var(--line-strong);
-}
-
-/* --------------------------------------------------------------------------
-   Scroll reveal
-   -------------------------------------------------------------------------- */
-
-/* Fail-safe by design: `.reveal` content is visible unless the observer has
-   actually mounted and flagged the document. A broken or unmounted observer can
-   never leave a section permanently blank. */
 .reveal {
   transition:
-    opacity var(--dur-4) var(--ease-out),
-    transform var(--dur-4) var(--ease-out);
+    opacity var(--d-4) var(--ease-out),
+    transform var(--d-4) var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
 :root.reveal-ready .reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(20px);
 }
 
 :root.reveal-ready .reveal.is-in {
@@ -398,28 +385,16 @@ p {
 }
 
 /* --------------------------------------------------------------------------
-   Shared keyframes
+   Keyframes
    -------------------------------------------------------------------------- */
 
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(18px);
   }
 
   to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes pop-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.94) translateY(10px);
-  }
-
-  100% {
     opacity: 1;
     transform: none;
   }
@@ -435,13 +410,26 @@ p {
   }
 }
 
-@keyframes shimmer {
-  from {
-    background-position: -180% 0;
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
   }
 
-  to {
-    background-position: 180% 0;
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -14px, 0);
   }
 }
 
@@ -452,48 +440,6 @@ p {
   }
 
   50% {
-    transform: translate3d(2%, -3%, 0) scale(1.06);
+    transform: translate3d(2%, -3%, 0) scale(1.07);
   }
-}
-
-@keyframes blink-caret {
-  0%,
-  45% {
-    opacity: 1;
-  }
-
-  50%,
-  95% {
-    opacity: 0;
-  }
-}
-
-/* Utility */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.scroll-x {
-  display: flex;
-  gap: var(--s-4);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding-bottom: 6px;
-}
-
-.scroll-x::-webkit-scrollbar {
-  display: none;
-}
-
-.scroll-x > * {
-  scroll-snap-align: start;
 }

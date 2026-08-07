@@ -1,0 +1,213 @@
+.pg {
+  position: relative;
+}
+
+.pg__head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto var(--s-7);
+}
+
+.pg__title {
+  font-size: var(--t-h1);
+  letter-spacing: -0.042em;
+}
+
+.pg__sub {
+  margin-top: var(--s-3);
+  font-size: var(--t-lead);
+  color: var(--muted);
+}
+
+.pg__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: var(--s-5);
+  padding: 9px 20px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: #fff;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ---- The six-card grid --------------------------------------------------- */
+
+.pg__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-4);
+  transition:
+    opacity 240ms var(--ease),
+    transform 240ms var(--ease);
+}
+
+/* Cards lift and fade together, then the new hand deals back in. */
+.pg__grid.is-dealing {
+  opacity: 0;
+  transform: translateY(-14px) scale(0.985);
+}
+
+/* ---- Actions ------------------------------------------------------------- */
+
+.pg__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--s-7);
+}
+
+.pg__more {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 44px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.28rem);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  overflow: hidden;
+  box-shadow: var(--sh-2);
+  transition:
+    transform var(--d-1) var(--ease),
+    box-shadow var(--d-2) var(--ease);
+}
+
+/* A slow sweep of the six card colours — the button that keeps being pressed. */
+.pg__more::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    var(--c1-accent),
+    var(--c5-accent),
+    var(--c2-accent),
+    var(--c6-accent),
+    var(--c3-accent),
+    var(--c4-accent),
+    var(--c1-accent)
+  );
+  background-size: 260% 100%;
+  opacity: 0;
+  transition: opacity var(--d-3) var(--ease);
+  animation: sweep 7s linear infinite;
+}
+
+@keyframes sweep {
+  to {
+    background-position: 260% 0;
+  }
+}
+
+.pg__more > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pg__more:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sh-3);
+}
+
+.pg__more:hover::before {
+  opacity: 1;
+}
+
+.pg__more:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.pg__more:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.pg__more-spark {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  transition: transform var(--d-3) var(--ease-spring);
+}
+
+.pg__more:hover .pg__more-spark {
+  transform: rotate(18deg) scale(1.18);
+}
+
+.pg__micro {
+  margin-top: 14px;
+  font-size: var(--t-sm);
+  color: var(--muted);
+}
+
+.pg__surprise {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--s-5);
+  padding: 11px 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  font-size: var(--t-sm);
+  font-weight: 550;
+  color: var(--ink-2);
+  transition:
+    transform var(--d-1) var(--ease),
+    border-color var(--d-2) var(--ease);
+}
+
+.pg__surprise:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+}
+
+.pg__count {
+  margin-top: var(--s-5);
+  font-size: var(--t-xs);
+  color: var(--muted-2);
+}
+
+/* ---- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 1040px) {
+  .pg__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  /* Swipeable rail on phones — six stacked cards would bury the button. */
+  .pg__grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 4px var(--gutter) 10px;
+  }
+
+  .pg__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pg__grid > * {
+    flex: 0 0 82%;
+    scroll-snap-align: center;
+  }
+
+  .pg__more {
+    width: 100%;
+    justify-content: center;
+    padding: 19px 24px;
+  }
+}
