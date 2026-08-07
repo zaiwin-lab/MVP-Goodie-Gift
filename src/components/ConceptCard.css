@@ -390,6 +390,12 @@
   font-size: var(--t-xs);
   color: var(--muted-2);
   line-height: 1.35;
+  /* Keeps the footer row two lines tall whatever the audience list says. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .concept__range-inline {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useLocation } from "react-router-dom";
 import { useStore } from "../state/store";
 import { PACKAGES_BY_ID } from "../data/packages";
 import type { QuotationContact, QuotationRequest } from "../types";
@@ -41,7 +42,14 @@ export function QuotationModal() {
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState<QuotationRequest | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
   const open = quote !== null;
+
+  // Leaving the page the request was started from closes it — an orphaned
+  // dialog over a different route has lost the context it was quoting.
+  useEffect(() => {
+    closeQuote();
+  }, [pathname, closeQuote]);
 
   useEffect(() => {
     if (!open) return;
