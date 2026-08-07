@@ -260,6 +260,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [setSaved],
   );
 
+  const openQuote = useCallback((target?: QuoteTarget) => setQuote(target ?? {}), []);
+  const closeQuote = useCallback(() => setQuote(null), []);
+
   const submitQuote = useCallback(
     (contact: QuotationContact): QuotationRequest => {
       const target = quote;
@@ -307,8 +310,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       toggleSave,
       isSaved: (id: string) => saved.includes(id),
       quote,
-      openQuote: (target?: QuoteTarget) => setQuote(target ?? {}),
-      closeQuote: () => setQuote(null),
+      openQuote,
+      closeQuote,
       submitQuote,
       leads,
     }),
@@ -328,6 +331,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       saved,
       toggleSave,
       quote,
+      openQuote,
+      closeQuote,
       submitQuote,
       leads,
     ],

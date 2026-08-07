@@ -46,8 +46,13 @@ export function QuotationModal() {
   const open = quote !== null;
 
   // Leaving the page the request was started from closes it — an orphaned
-  // dialog over a different route has lost the context it was quoting.
+  // dialog over a different route has lost the context it was quoting. Compared
+  // against the previous path rather than run on every effect pass, so a change
+  // of callback identity can't close a dialog the visitor just opened.
+  const lastPath = useRef(pathname);
   useEffect(() => {
+    if (lastPath.current === pathname) return;
+    lastPath.current = pathname;
     closeQuote();
   }, [pathname, closeQuote]);
 
