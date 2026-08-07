@@ -1,0 +1,339 @@
+.convo {
+  margin-top: clamp(36px, 4.5vw, 64px);
+  scroll-margin-top: calc(var(--nav-h) + 20px);
+}
+
+/* ---- Thinking ------------------------------------------------------------ */
+
+.convo__thinking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-5);
+  padding: clamp(28px, 4vw, 48px) var(--gutter);
+  border-radius: var(--r-xl);
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-2);
+  animation: rise-in var(--dur-3) var(--ease-out);
+}
+
+.convo__orb {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+}
+
+.convo__orb span {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--ai-gradient);
+  opacity: 0.5;
+  animation: orb-pulse 1.9s var(--ease) infinite;
+}
+
+.convo__orb span:nth-child(2) {
+  animation-delay: 0.35s;
+}
+
+.convo__orb span:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+@keyframes orb-pulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.7;
+  }
+
+  70% {
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+.convo__stages {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: min(300px, 100%);
+}
+
+.convo__stages li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--t-sm);
+  color: var(--muted-2);
+  opacity: 0.45;
+  transition:
+    opacity var(--dur-2) var(--ease),
+    color var(--dur-2) var(--ease);
+}
+
+.convo__stages li.is-done {
+  opacity: 0.75;
+  color: var(--muted);
+}
+
+.convo__stages li.is-done svg {
+  color: var(--jade);
+}
+
+.convo__stages li.is-current {
+  opacity: 1;
+  color: var(--ink);
+  font-weight: 550;
+}
+
+.convo__dot {
+  width: 14px;
+  height: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.convo__stages li.is-current .convo__dot::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ember);
+  animation: orb-pulse 1.2s var(--ease) infinite;
+}
+
+.convo__stages li:not(.is-current):not(.is-done) .convo__dot::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentcolor;
+}
+
+.convo__skeletons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-4);
+  width: 100%;
+  margin-top: var(--s-3);
+}
+
+.convo__skeleton {
+  height: 128px;
+  border-radius: var(--r-md);
+  background: linear-gradient(
+    100deg,
+    var(--paper-2) 20%,
+    var(--paper-3) 40%,
+    var(--paper-2) 60%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* ---- Follow-up ----------------------------------------------------------- */
+
+.convo__ask {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  align-items: flex-start;
+  padding: clamp(24px, 3.4vw, 38px);
+  border-radius: var(--r-xl);
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-2);
+  animation: rise-in var(--dur-3) var(--ease-out);
+}
+
+.convo__bubble {
+  max-width: 62ch;
+}
+
+.convo__who {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  margin-bottom: 10px;
+}
+
+.convo__who-mark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--ai-gradient);
+  color: #fff;
+  font-size: 0.62rem;
+}
+
+.convo__bubble p {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.55rem);
+  line-height: 1.35;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+}
+
+.convo__understood {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+.convo__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.convo__chip {
+  animation: pop-in var(--dur-3) var(--ease-spring) backwards;
+}
+
+/* ---- Results ------------------------------------------------------------- */
+
+.convo__results {
+  animation: rise-in var(--dur-3) var(--ease-out);
+}
+
+.convo__results-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: var(--s-6);
+}
+
+.convo__title {
+  font-size: var(--t-h2);
+  letter-spacing: -0.035em;
+}
+
+.convo__restart {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--muted);
+  transition:
+    color var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease);
+}
+
+.convo__restart:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.convo__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: var(--s-5);
+  align-items: stretch;
+}
+
+/* ---- Refinement ---------------------------------------------------------- */
+
+.convo__refine {
+  margin-top: var(--s-7);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+}
+
+.convo__refine-label {
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin-bottom: 14px;
+}
+
+.convo__refine-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.convo__refine-chip {
+  background: var(--white);
+}
+
+.convo__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-top: var(--s-6);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--forest);
+  color: var(--on-dark-muted);
+}
+
+.convo__foot p {
+  max-width: 62ch;
+  font-size: var(--t-sm);
+  line-height: 1.5;
+}
+
+.convo__foot strong {
+  color: var(--on-dark);
+  display: block;
+  font-size: 0.98rem;
+  margin-bottom: 3px;
+}
+
+@media (max-width: 720px) {
+  .convo__skeletons {
+    grid-template-columns: 1fr;
+  }
+
+  .convo__skeleton:nth-child(n + 2) {
+    display: none;
+  }
+
+  .convo__refine-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(var(--s-5) * -1);
+    padding-inline: var(--s-5);
+  }
+
+  .convo__refine-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .convo__grid {
+    grid-template-columns: 1fr;
+  }
+}
