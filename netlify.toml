@@ -2,11 +2,8 @@
   command = "npm run build"
   publish = "dist"
 
-# Client-side routing: /idea/:slug must resolve to the SPA shell.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# No catch-all redirect: V1 is a single page with no client-side routing, so an
+# unknown path should genuinely 404 rather than silently serve the home page.
 
 [[headers]]
   for = "/*"
