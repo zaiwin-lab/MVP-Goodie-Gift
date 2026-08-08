@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(buzz)",
+      "Bash(buzz *)",
+      "Bash(buzz:*)",
+      "PowerShell(buzz)",
+      "PowerShell(buzz *)",
+
+      "Bash(ls *)",
+      "Bash(pwd)",
+      "Bash(cat *)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+
+      "Bash(npm run *)",
+      "Bash(npm ci)",
+      "Bash(npm install)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)"
+    ]
+  }
+}
