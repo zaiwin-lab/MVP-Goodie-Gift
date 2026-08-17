@@ -1,108 +1,120 @@
-# GOODIE — V1
+# GOODIE — Smart Event Gifting Advisor
 
-> Need goodies for your event?
+> **Portfolio maturity:** Working Public Prototype · Deterministic Recommendation and Quotation Journey
 
-A one-page prototype for a Sarawak event goodies and gifting platform. The
-customer journey is:
+[Open the verified live demonstration](https://goodie-sarawak.netlify.app)
 
-**DISCOVER → PLAY → GET INSPIRED → PERSONALISE → FREE QUOTATION**
+GOODIE is a Sarawak-focused event-gifting discovery experience that helps a buyer move from a vague event idea to a structured quotation brief.
 
-Simple engineering, mock data, no backend. The effort goes into the experience.
+The repository name retains MVP for development history. **GOODIE** is the permanent product identity.
 
-## Run it
+## Business problem
 
-```bash
-npm install
-npm run dev        # http://localhost:5173
-npm run build      # type-check + production build to dist/
-npm run preview    # serve the production build
-```
+Event organisers frequently know the occasion, audience and budget but not which gift concept is suitable. Conventional catalogue browsing creates too many choices, while a quotation form asks for details before the buyer has found inspiration.
 
-Node 20+. React 19 + TypeScript on Vite. Two runtime dependencies (`react`,
-`react-dom`) — no router, no UI kit, no icon library, no animation library.
+GOODIE combines discovery and qualification in one guided journey:
 
-## The signature experience
+**Discover → explore → personalise → compare suggestions → prepare quotation request**
 
-**The Goodie Idea Playground.** Six colourful idea cards, each with its own
-colour personality, and one irresistible button: **✨ Show me 6 more**.
+## Intended users
 
-36 mock ideas are stored as six ideas per colour, dealt in rounds. That means
-six presses give six completely fresh sets, and every set always shows all six
-colour personalities. **🎲 Surprise me** deals a random idea from each colour
-instead of advancing the round.
+- corporate and government event organisers;
+- associations, community groups and programme teams;
+- SMEs planning customer, staff or festive gifts;
+- gifting suppliers who need clearer briefs before preparing quotations.
 
-Nothing is asked of the visitor here — they can look, press, look, press, and
-discover for as long as they like.
+## Core capabilities
 
-## The journey
+- a visual playground containing 36 demonstration gift ideas across six colour personalities;
+- rotating and randomised discovery modes;
+- an expanded concept view with example contents, suitability and estimated range;
+- a one-question-at-a-time event brief covering event, quantity, budget, timing and location;
+- deterministic suggestion matching using event keywords, budget and quantity;
+- three ranked suggestions with an explained best match;
+- a short quotation handoff that carries earlier answers forward;
+- responsive interaction, keyboard-labelled controls and reduced-motion support.
 
-Clicking any card opens a single fluid surface (`Journey.tsx`) rather than a
-separate page:
+## Strategic value
 
-1. **Expanded idea** — story, possible contents, best-for, estimated range
-2. **"Planning something similar?"** — one conversational input
-3. **Five questions, one at a time** — event, quantity, budget, date, place,
-   with quick-choice buttons and a progress bar. Back always works and answers
-   are retained.
-4. **Short processing moment** — rotating status lines, not a spinner
-5. **Three personalised suggestions** — the best match is pre-selected
-6. **Free quotation** — only four contact fields; everything already answered is
-   carried over and shown as "no need to retype it"
-7. **Success** — reference number and a short confetti burst
+GOODIE demonstrates how a service business can turn an unstructured enquiry into a useful, standardised brief without forcing the customer into a long form at the beginning.
 
-The quotation CTAs in the nav, hero, mid-page and footer skip straight to step 3.
+For an authorised commercial implementation, the journey could:
 
-## Structure
+- improve customer confidence before requesting a quote;
+- give a sales team more complete event requirements;
+- separate inspiration from confidential sourcing and margin decisions;
+- support repeatable matching logic before introducing more complex AI;
+- create a foundation for supplier, inventory, CRM and quotation integrations.
 
-```
-src/
-  types.ts               Domain model
-  data/ideas.ts          36 ideas, six per colour, dealt in rounds
-  data/content.ts        All page copy, options and feature lists
-  lib/match.ts           Suggestion scoring (keyword + budget + quantity)
-  lib/hooks.ts           Reveal observer, scroll lock, cycling
-  components/            One component + one stylesheet each
-  styles/tokens.css      Design tokens, including the six colour triples
-  styles/global.css      Reset, layout and shared UI
-```
+These are potential operational outcomes, not claims of measured adoption or revenue.
 
-### The colour system
+## How the recommendation works
 
-Each personality is a triple — a soft `tint` for the card, a deep `ink` for
-type, and a saturated `accent` for labels and hover states — defined once in
-`tokens.css` as `--c1-*` through `--c6-*`. The colours carry through everywhere:
-card labels, the "Show me 6 more" hover sweep, the bento grid borders, the
-Sarawak use-case chips, the confetti and the brand mark.
+The current matcher is deliberately simple, local and inspectable. It scores the demonstration ideas using event keywords, budget fit and quantity fit. No external AI model or API is called.
 
-The rest of the page is deliberately near-white so the cards stay the signature.
+That design keeps the prototype fast and explainable while providing a clear interface for a future recommendation service.
 
-### Sourcing model
+## What is implemented
 
-`SourceChannel` in `types.ts` models the future mix — in-house, preferred
-supplier, local Sarawak, marketplace, custom — but V1 exposes none of it.
-Customers only ever see an **estimated range**; supplier identity, cost and
-margin stay internal by construction.
+The repository contains a React and TypeScript single-page application, the complete guided journey, structured domain types, 36 demonstration ideas, deterministic matching, responsive styling and Netlify deployment configuration.
 
-## Not built (deliberately)
+### Technology
 
-No login, accounts, payment, admin, database, CRM, inventory, real supplier
-integration or AI API. AI is positioned as the technology *behind* the service —
-a subtle badge up front, with the full "Smart Technology" reveal only after the
-visitor understands what's being offered.
+React 19 · TypeScript · Vite · CSS design tokens · deterministic local matching · Netlify
 
-## Deployment
+The core application uses only React and React DOM at runtime. It does not currently include a router, UI framework, authentication service, database or payment provider.
 
-`netlify.toml` builds to `dist/` with long-lived caching for hashed assets and
-no-cache on `index.html`.
+## Delivery role
 
-## Verified
+**Ts. Zaiwin Kassim** leads product strategy, stakeholder requirements, solution architecture and supervised AI-assisted delivery with the **KOBIS AI Prodigy Team**. For GOODIE, that role covers the customer journey, recommendation concept, quotation workflow and responsible product boundaries.
 
-Checked in Chromium at 390px, 834px, 1180px and 1680px:
+This portfolio attribution does not imply endorsement, supplier participation, customer adoption or commercial deployment by any external organisation.
 
-- Full journey works end to end from both entry points (card and quotation CTA)
-- 6 presses → 36 distinct ideas, always 6 distinct colours
-- Zero horizontal overflow at every breakpoint; no console errors
-- Hero floating shapes never collide with the headline (hidden below 1240px)
-- Single `h1`, every control has an accessible name, motion respects
-  `prefers-reduced-motion`
-- Scroll reveals fail safe: content is visible unless the observer has mounted
+## Responsible-use boundaries
+
+- Gift ideas, estimated ranges and supplier channels are demonstration data, not binding offers.
+- The suggestion score is a planning aid; a person must review suitability, availability, lead time, budget, branding and delivery requirements.
+- The current prototype does not verify suppliers, inventory, materials, sustainability claims or product safety.
+- No live AI model is present, so the interface must not imply that an autonomous AI has sourced or priced an item.
+- Contact details entered in the prototype are not sent to a real quotation backend.
+- A production form would require consent, secure transmission, retention rules and access controls.
+- Final prices, taxes, fulfilment terms and warranties require an authorised written quotation.
+
+## Current limitations
+
+- no backend, database, CRM or quotation delivery;
+- no login, customer account or administrative workspace;
+- no supplier, stock, logistics or payment integration;
+- no live AI recommendation service;
+- no verified commercial prices or margin calculations;
+- no automated test suite is documented;
+- the displayed confirmation and reference number are demonstration interactions only.
+
+## Run locally
+
+Requirements: Node.js 20 or later and npm.
+
+    npm install
+    npm run dev
+    npm run typecheck
+    npm run build
+    npm run preview
+
+## Deployment evidence
+
+The connected hosting record identifies **goodie-sarawak** as the project for this repository and reports its current deployment as ready. The committed Netlify configuration builds with npm run build and publishes the dist directory.
+
+## Repository map
+
+- **src/App.tsx** — main public experience
+- **src/components/Journey.tsx** — discovery-to-quotation journey
+- **src/lib/match.ts** — readable suggestion scoring
+- **src/data/ideas.ts** — 36 demonstration ideas
+- **src/data/content.ts** — page copy and choice sets
+- **src/types.ts** — event, idea and quotation types
+- **src/styles** — responsive design system
+- **netlify.toml** — build, caching and security headers
+
+## Portfolio evidence
+
+GOODIE demonstrates product-led conversion design, explainable recommendation logic, typed front-end architecture and a disciplined separation between a persuasive prototype and unimplemented commercial operations.
